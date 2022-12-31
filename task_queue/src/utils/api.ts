@@ -1,6 +1,7 @@
 import axios from 'axios'
 import axiosRetry from 'axios-retry'
 import format from 'date-fns/format'
+import { subDays } from 'date-fns'
 import {
     TeamsResponse,
     StadiumsResponse,
@@ -89,4 +90,26 @@ const getBoxScore = async (GameID: number | string) => {
     return response
 }
 
-export { getAllNBATeams, getStadiums, getSchedule, getReferees, getBoxScore, getPlayers }
+const getGameIDsPastDays = async (numberOfDays: number) => {
+    const days = []
+    for (let i = 0; i < numberOfDays; i++) {
+        const date = subDays(new Date(), i)
+        const formattedDate = format(date, 'yyyy-LLL-dd')
+        days.push(formattedDate)
+    }
+    const calls = days.map((day) => {
+        return apiCall<GameOfScheduleResponse[]>(`scores/json/GamesByDate/${day}`)
+    })
+    try {
+        const responses = await Promise.all(calls)
+        if (responses) {
+            const flattened = responses.flat().map((el) => el?.GameID)
+            return flattened
+        }
+    } catch (err) {
+        logger.error(err)
+    }
+    return null
+}
+
+export { getAllNBATeams, getStadiums, getSchedule, getReferees, getBoxScore, getPlayers, getGameIDsPastDays }

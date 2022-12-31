@@ -1,11 +1,14 @@
 import { Job } from 'bullmq'
 import { getTeams, getReferees, getGames, getBoxScore, getPlayers } from './seed_db_tasks'
-import { loadBoxScore, testTask } from './tasks'
+import { loadBoxScore, testTask, loadStatsByNumDays } from './tasks'
 
 export default async (job: Job) => {
     switch (job.name) {
         case 'testTask':
             testTask()
+            break
+        case 'loadStatsByNumDays':
+            loadStatsByNumDays(job.data)
             break
         case 'loadBoxScore':
             await loadBoxScore(job.data)

@@ -8,8 +8,13 @@ import { parseTeamStatResponseToPrisma, parseStatResponseToPrisma } from './load
 const updateGame = async (GameID: number, boxScore: BoxScoreResponse) => {
     return prismaClient.game.update({
         where: { GameID },
-        // @ts-ignore prisma doesn't know how to read json
-        data: { Quarters: boxScore.Game.Quarters },
+        data: {
+            // @ts-ignore prisma doesn't know how to read json
+            Quarters: boxScore.Game.Quarters,
+            Status: boxScore.Game.Status,
+            AwayTeamScore: boxScore.Game.AwayTeamScore,
+            HomeTeamScore: boxScore.Game.HomeTeamScore,
+        },
     })
 }
 
@@ -35,6 +40,7 @@ const createStatline = async (statline: StatlineResponse) => {
 }
 
 export default async (GameIDs: number[]) => {
+    logger.info(GameIDs)
     const GameIDsCopy = GameIDs.slice()
     const GameID = GameIDsCopy.pop()
     if (!GameID) {

@@ -28,8 +28,9 @@ if (process.env.REDIS_BULLMQ_URL) {
         jobs.forEach((job) => {
             statsqueue.removeRepeatableByKey(job.key)
         })
-        await statsqueue.add('testTask', null, { repeat: { every: 1000, limit: 20 } })
+        // await statsqueue.add('testTask', null, { repeat: { every: 1000, limit: 20 } })
     })()
+    statsqueue.add('loadStatsByNumDays', 2)
 } else {
     console.log('env var TQ_STATS_URL not found, please check bull service in docker-compose.yml')
 }
