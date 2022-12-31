@@ -1,0 +1,6 @@
+FROM node:18 as base
+WORKDIR /src
+COPY . /src
+RUN npm ci
+ENV NODE_ENV=development
+CMD ["npm", "run", "dev"]

@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:14.4
+    restart: unless-stopped
+    volumes:
+      - ./z_storage/db_data:/var/lib/postgresql/db_data
+    environment:
+      - PGPORT=${PG_PORT}
+    env_file:
+      - ./z_env/postgres.env
+    ports:
+      - ${PG_PORT}:${PG_PORT}
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    environment:
+      - PG_URL=${PG_URL}
+      - REDIS_BULLMQ_URL=${REDIS_BULLMQ_URL}
+    volumes:
+      - ./api:/src
+    ports:
+      - ${API_PORT}:${API_PORT}
+  redis:
+    image: redis:7
+    build: ./z_storage/redis
+    volumes:
+      - ./z_storage/redis/redis_data:/data
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+
+  task_queue:
+    build:
+      context: ./task_queue
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    volumes:
+      - ./task_queue:/src
+    env_file:
+      - ./z_env/task_queue.env
+    environment:
+      - REDIS_BULLMQ_URL=${REDIS_BULLMQ_URL}
+      - REDIS_DATA_URL=${REDIS_DATA_URL}
+      - PG_URL=${PG_URL}
