@@ -20,4 +20,11 @@ const seedGetGames = async () => {
     addToQueue('seedGetGames', null)
 }
 
-export { seedGetTeams, seedGetReferees, seedGetGames }
+const seedGetBoxScore = async () => {
+    addToQueue('seedGetBoxScore', null)
+}
+const seedGetPlayers = async () => {
+    addToQueue('seedGetPlayers', null)
+}
+
+export { seedGetTeams, seedGetReferees, seedGetGames, seedGetBoxScore, seedGetPlayers }

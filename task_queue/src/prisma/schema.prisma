@@ -8,27 +8,29 @@ datasource db {
 }
 
 model Team {
-  TeamID           Int    @id
-  Key              String
-  City             String
-  Name             String
-  stadium          String
-  Conference       String
-  Division         String
-  inner_color      String
-  outer_color      String
-  WikipediaLogoUrl String
-  Wins             Int
-  Losses           Int
-  home_games       Game[] @relation("home_games")
-  away_games       Game[] @relation("away_games")
-
-  team_game_stats     TeamStats[] @relation("team_game_stats")
-  opponent_team_stats TeamStats[] @relation("opponent_team_stats")
+  TeamID                       Int             @id
+  Key                          String
+  City                         String
+  Name                         String
+  stadium                      String
+  Conference                   String
+  Division                     String
+  inner_color                  String
+  outer_color                  String
+  WikipediaLogoUrl             String
+  Wins                         Int
+  Losses                       Int
+  home_games                   Game[]          @relation("home_games")
+  away_games                   Game[]          @relation("away_games")
+  team_game_statlines          TeamStatlines[] @relation("team_game_statlines")
+  opponent_team_game_statlines TeamStatlines[] @relation("opponent_team_game_statlines")
+  players                      Player[]
+  statlines                    Statline[]      @relation("team_statlines")
+  opponent_team_statlines      Statline[]      @relation("opponent_team_statlines")
 }
 
 model Game {
-  GameID               Int         @id
+  GameID               Int             @id
   Season               Int
   SeasonType           Int
   Status               String
@@ -37,8 +39,8 @@ model Game {
   DateTime             DateTime
   AwayTeamID           Int
   HomeTeamID           Int
-  away_team            Team        @relation("away_games", fields: [AwayTeamID], references: [TeamID])
-  home_team            Team        @relation("home_games", fields: [HomeTeamID], references: [TeamID])
+  away_team            Team            @relation("away_games", fields: [AwayTeamID], references: [TeamID])
+  home_team            Team            @relation("home_games", fields: [HomeTeamID], references: [TeamID])
   stadium              String
   city                 String
   AwayTeamScore        Int?
@@ -48,18 +50,19 @@ model Game {
   TimeRemainingSeconds String?
   Quarters             Json?
   CrewChiefID          Int?
-  crewchief            Referee?    @relation("crewchief_games", fields: [CrewChiefID], references: [RefereeID])
+  crewchief            Referee?        @relation("crewchief_games", fields: [CrewChiefID], references: [RefereeID])
   UmpireID             Int?
-  umpire               Referee?    @relation("umpire_games", fields: [UmpireID], references: [RefereeID])
+  umpire               Referee?        @relation("umpire_games", fields: [UmpireID], references: [RefereeID])
   RefereeID            Int?
-  referee              Referee?    @relation("referee_games", fields: [RefereeID], references: [RefereeID])
-  team_stats           TeamStats[]
+  referee              Referee?        @relation("referee_games", fields: [RefereeID], references: [RefereeID])
+  team_statlines       TeamStatlines[]
+  statlines            Statline[]
 }
 
-model TeamStats {
+model TeamStatlines {
   StatID                        Int     @id
   TeamID                        Int
-  team                          Team    @relation("team_game_stats", fields: [TeamID], references: [TeamID])
+  team                          Team    @relation("team_game_statlines", fields: [TeamID], references: [TeamID])
   Season                        Int
   Name                          String
   Team                          String
@@ -68,7 +71,7 @@ model TeamStats {
   GameID                        Int
   game                          Game    @relation(fields: [GameID], references: [GameID])
   OpponentID                    Int
-  opponent_team                 Team    @relation("opponent_team_stats", fields: [OpponentID], references: [TeamID])
+  opponent_team                 Team    @relation("opponent_team_game_statlines", fields: [OpponentID], references: [TeamID])
   Opponent                      String
   HomeOrAway                    String
   IsGameOver                    Boolean
@@ -98,6 +101,112 @@ model TeamStats {
   FantasyPointsFanDuel          Decimal @db.Decimal(4, 1)
   FantasyPointsDraftKings       Decimal @db.Decimal(4, 1)
   FantasyPointsYahoo            Decimal @db.Decimal(4, 1)
+}
+
+model Player {
+  PlayerID                            Int     @id
+  TeamID                              Int
+  team                                Team    @relation(fields: [TeamID], references: [TeamID])
+  Jersey                              Int
+  PositionCategory                    String
+  Position                            String
+  FirstName                           String
+  LastName                            String
+  Height                              Int
+  Weight                              Int
+  BirthDate                           String
+  BirthCity                           String
+  BirthState                          String
+  BirthCountry                        String
+  HighSchool                          String
+  College                             String
+  PhotoUrl                            String
+  SportRadarPlayerID                  String
+  RotoworldPlayerID                   Int
+  RotoWirePlayerID                    Int
+  FantasyAlarmPlayerID                Int
+  InjuryStatus                        String?
+  InjuryBodyPart                      String?
+  InjuryStartDate                     String?
+  InjuryNotes                         String?
+  FanDuelPlayerID                     Int
+  DraftKingsPlayerID                  Int
+  YahooPlayerID                       Int
+  FanDuelName                         String
+  DraftKingsName                      String
+  YahooName                           String
+  DepthChartPosition                  String
+  DepthChartOrder                     Int
+  UsaTodayPlayerID                    Int
+  UsaTodayHeadshotUrl                 String
+  UsaTodayHeadshotNoBackgroundUrl     String
+  UsaTodayHeadshotUpdated             String
+  UsaTodayHeadshotNoBackgroundUpdated String
+  NbaDotComPlayerID                   Int
+
+  statlines Statline[]
+}
+
+model Statline {
+  StatID                        Int     @id
+  TeamID                        Int
+  team                          Team    @relation("team_statlines", fields: [TeamID], references: [TeamID])
+  PlayerID                      Int
+  player                        Player  @relation(fields: [PlayerID], references: [PlayerID])
+  Name                          String
+  Position                      String
+  Started                       Int
+  InjuryStatus                  String?
+  InjuryBodyPart                String?
+  InjuryStartDate               String?
+  InjuryNotes                   String?
+  GameID                        Int
+  game                          Game    @relation(fields: [GameID], references: [GameID])
+  OpponentID                    Int
+  opponent_team                 Team    @relation("opponent_team_statlines", fields: [OpponentID], references: [TeamID])
+  HomeOrAway                    String
+  FantasyPoints                 Decimal @db.Decimal(4, 1)
+  Minutes                       Int
+  Seconds                       Int
+  FieldGoalsMade                Int
+  FieldGoalsAttempted           Int
+  FieldGoalsPercentage          Decimal @db.Decimal(4, 1)
+  EffectiveFieldGoalsPercentage Decimal @db.Decimal(4, 1)
+  TwoPointersMade               Int
+  TwoPointersAttempted          Int
+  TwoPointersPercentage         Decimal @db.Decimal(4, 1)
+  ThreePointersMade             Int
+  ThreePointersAttempted        Int
+  ThreePointersPercentage       Decimal @db.Decimal(4, 1)
+  FreeThrowsMade                Int
+  FreeThrowsAttempted           Int
+  FreeThrowsPercentage          Decimal @db.Decimal(4, 1)
+  OffensiveRebounds             Int
+  DefensiveRebounds             Int
+  Rebounds                      Int
+  OffensiveReboundsPercentage   Decimal @db.Decimal(4, 1)
+  DefensiveReboundsPercentage   Decimal @db.Decimal(4, 1)
+  TotalReboundsPercentage       Decimal @db.Decimal(4, 1)
+  Assists                       Int
+  Steals                        Int
+  BlockedShots                  Int
+  Turnovers                     Int
+  PersonalFouls                 Int
+  Points                        Int
+  TrueShootingPercentage        Decimal @db.Decimal(4, 1)
+  PlayerEfficiencyRating        Decimal @db.Decimal(4, 1)
+  AssistsPercentage             Decimal @db.Decimal(4, 1)
+  StealsPercentage              Decimal @db.Decimal(4, 1)
+  BlocksPercentage              Decimal @db.Decimal(4, 1)
+  TurnOversPercentage           Decimal @db.Decimal(4, 1)
+  UsageRatePercentage           Decimal @db.Decimal(4, 1)
+  FantasyPointsFanDuel          Decimal @db.Decimal(4, 1)
+  FantasyPointsDraftKings       Decimal @db.Decimal(4, 1)
+  FantasyPointsYahoo            Decimal @db.Decimal(4, 1)
+  PlusMinus                     Int
+  DoubleDoubles                 Int
+  TripleDoubles                 Int
+  FantasyPointsFantasyDraft     Decimal @db.Decimal(4, 1)
 }
 
 model Referee {

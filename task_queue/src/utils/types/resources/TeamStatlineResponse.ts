@@ -1,4 +1,4 @@
-export default interface BoxScoreResponse {
+export default interface TeamStatlineResponse {
     StatID: number
     TeamID: number
     SeasonType: number

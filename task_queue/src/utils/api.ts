@@ -1,6 +1,14 @@
 import axios from 'axios'
+import axiosRetry from 'axios-retry'
 import format from 'date-fns/format'
-import { TeamsResponse, StadiumsResponse, GameOfScheduleResponse, RefereeResponse, BoxScoreResponse } from './types'
+import {
+    TeamsResponse,
+    StadiumsResponse,
+    GameOfScheduleResponse,
+    RefereeResponse,
+    BoxScoreResponse,
+    PlayerResponse,
+} from './types'
 import logger from './logger'
 
 const scoresBase = axios.create({
@@ -9,6 +17,13 @@ const scoresBase = axios.create({
     headers: {
         'Content-Type': 'application/json',
         'Ocp-Apim-Subscription-Key': process.env.SPORTDATA_REAL_KEY,
+    },
+})
+
+axiosRetry(scoresBase, {
+    retries: 10,
+    retryDelay: (retryCount) => {
+        return retryCount * 1000
     },
 })
 
@@ -64,9 +79,14 @@ const getReferees = async () => {
     return response
 }
 
+const getPlayers = async () => {
+    const response = await apiCall<PlayerResponse[]>('scores/json/Players')
+    return response
+}
+
 const getBoxScore = async (GameID: number | string) => {
     const response = await apiCall<BoxScoreResponse>(`stats/json/BoxScore/${GameID}`)
     return response
 }
 
-export { getAllNBATeams, getStadiums, getSchedule, getReferees }
+export { getAllNBATeams, getStadiums, getSchedule, getReferees, getBoxScore, getPlayers }

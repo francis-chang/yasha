@@ -1,6 +1,6 @@
 import express from 'express'
 import pino from 'pino-http'
-import { seedGetTeams, seedGetReferees, seedGetGames } from './tasks'
+import { seedGetTeams, seedGetReferees, seedGetGames, seedGetBoxScore, seedGetPlayers } from './tasks'
 
 const app = express()
 const PORT = process.env.API_PORT ? process.env.API_PORT : 3000
@@ -13,5 +13,5 @@ app.get('/testseed', async (req, res) => {
 
 app.listen(PORT, async () => {
     console.log(`Express server is listening at ${PORT}`)
-    seedGetGames()
+    seedGetBoxScore()
 })

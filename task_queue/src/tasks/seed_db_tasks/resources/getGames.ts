@@ -2,7 +2,6 @@ import { getSchedule, getStadiums } from '../../../utils/api'
 import { prismaClient, wrapPrismaQuery } from '../../../utils/prismaClient'
 import { Game, Prisma } from '@prisma/client'
 import { GameOfScheduleResponse } from '../../../utils/types'
-import teamColors from '../../../utils/teamColors'
 import logger from '../../../utils/logger'
 
 const insertGames = async (data: Game[]) => {
@@ -35,7 +34,7 @@ const gameMapFunction = (game: GameOfScheduleResponse, stadium: string, city: st
         Quarter: game.Quarter,
         TimeRemainingMinutes: game.TimeRemainingMinutes,
         TimeRemainingSeconds: game.TimeRemainingSeconds,
-        Quarters: game.Quarters,
+        Quarters: JSON.stringify(game.Quarters),
         CrewChiefID: game.CrewChiefID,
         UmpireID: game.UmpireID,
         RefereeID: game.RefereeID,
@@ -48,7 +47,12 @@ export default async () => {
     if (games && stadiums) {
         const mappedGames = games.map((game) => {
             const stadium = stadiums.filter((s) => s.StadiumID === game.StadiumID)[0]
-            return gameMapFunction(game, stadium.Name, stadium.City)
+            if (!stadium) {
+                logger.error(`Stadium not associated with game`)
+                return gameMapFunction(game, 'N/A', 'N/A')
+            } else {
+                return gameMapFunction(game, stadium.Name, stadium.City)
+            }
         })
         await wrapPrismaQuery(() => insertGames(mappedGames))
         logger.info('Games have been uploaded to db')
