@@ -25,6 +25,7 @@ services:
       - ./api:/src
     ports:
       - ${API_PORT}:${API_PORT}
+
   redis:
     image: redis:7
     build: ./z_storage/redis
@@ -46,3 +47,5 @@ services:
       - REDIS_BULLMQ_URL=${REDIS_BULLMQ_URL}
       - REDIS_DATA_URL=${REDIS_DATA_URL}
       - PG_URL=${PG_URL}
+    depends_on:
+      - redis

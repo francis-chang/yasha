@@ -13,5 +13,5 @@ app.get('/testseed', async (req, res) => {
 
 app.listen(PORT, async () => {
     console.log(`Express server is listening at ${PORT}`)
-    seedGetBoxScore()
+    // seedGetBoxScore()
 })
