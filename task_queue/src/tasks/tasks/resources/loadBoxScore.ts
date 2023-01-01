@@ -14,6 +14,9 @@ const updateGame = async (GameID: number, boxScore: BoxScoreResponse) => {
             Status: boxScore.Game.Status,
             AwayTeamScore: boxScore.Game.AwayTeamScore,
             HomeTeamScore: boxScore.Game.HomeTeamScore,
+            CrewChiefID: boxScore.Game.CrewChiefID,
+            UmpireID: boxScore.Game.UmpireID,
+            RefereeID: boxScore.Game.RefereeID,
         },
     })
 }
@@ -40,7 +43,6 @@ const createStatline = async (statline: StatlineResponse) => {
 }
 
 export default async (GameIDs: number[]) => {
-    logger.info(GameIDs)
     const GameIDsCopy = GameIDs.slice()
     const GameID = GameIDsCopy.pop()
     if (!GameID) {

@@ -2,6 +2,8 @@ import axios from 'axios'
 import axiosRetry from 'axios-retry'
 import format from 'date-fns/format'
 import { subDays } from 'date-fns'
+import utcToZonedTime from 'date-fns-tz/utcToZonedTime'
+
 import {
     TeamsResponse,
     StadiumsResponse,
@@ -90,10 +92,22 @@ const getBoxScore = async (GameID: number | string) => {
     return response
 }
 
+/**
+ * if it is 1am in EST 1/3 and numberOfDays is 3
+ * then this will return 1/3, 1/2, 1,1
+ * if it is 10pm in PST 1/3 and numDays is 3
+ * this wil return same
+ *
+ *
+ */
+
 const getGameIDsPastDays = async (numberOfDays: number) => {
     const days = []
-    for (let i = 0; i < numberOfDays; i++) {
-        const date = subDays(new Date(), i)
+    // starts from -1 because usually they have some game information already updated
+    for (let i = -1; i < numberOfDays; i++) {
+        const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+        const currentUTCDate = new Date()
+        const date = subDays(utcToZonedTime(currentUTCDate, currentTimeZone, { timeZone: 'America/New_York' }), i)
         const formattedDate = format(date, 'yyyy-LLL-dd')
         days.push(formattedDate)
     }
