@@ -55,8 +55,19 @@ export default async (GameIDs: number[]) => {
                 ...gameResponse.PlayerGames.map((statline) => wrapPrismaQuery(() => createStatline(statline))),
                 wrapPrismaQuery(() => updateGame(GameID, gameResponse)),
             ]
+
+            // delay is added because adding boxscores and statlines may take a while
+            // if race condition is still not satisfied within 10 seconds, sanity check updating all averages will happen hourly
+            const averagesPromises = gameResponse.PlayerGames.map(({ PlayerID }) =>
+                statsqueue.add('updateAverages', PlayerID, { delay: 10000 })
+            )
+            const lastFiveAveragesPromises = gameResponse.PlayerGames.map(({ PlayerID }) =>
+                statsqueue.add('updateLastFiveAverages', PlayerID, { delay: 10000 })
+            )
             try {
                 await Promise.all(promises)
+                await Promise.all(averagesPromises)
+                await Promise.all(lastFiveAveragesPromises)
             } catch (err) {
                 console.error(err)
             }

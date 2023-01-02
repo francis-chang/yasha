@@ -104,9 +104,9 @@ model TeamStatlines {
 }
 
 model Player {
-  PlayerID                            Int     @id
+  PlayerID                            Int                   @id
   TeamID                              Int
-  team                                Team    @relation(fields: [TeamID], references: [TeamID])
+  team                                Team                  @relation(fields: [TeamID], references: [TeamID])
   Jersey                              Int
   PositionCategory                    String
   Position                            String
@@ -143,8 +143,9 @@ model Player {
   UsaTodayHeadshotUpdated             String
   UsaTodayHeadshotNoBackgroundUpdated String
   NbaDotComPlayerID                   Int
-
-  statlines Statline[]
+  season_averages                     SeasonAverages?
+  last_five_averages                  LastFiveGameAverages?
+  statlines                           Statline[]
 }
 
 model Statline {
@@ -216,4 +217,68 @@ model Referee {
   referee_games   Game[] @relation("referee_games")
   umpire_games    Game[] @relation("umpire_games")
   crewchief_games Game[] @relation("crewchief_games")
+}
+
+model SeasonAverages {
+  PlayerID                Int     @id
+  player                  Player  @relation(fields: [PlayerID], references: [PlayerID])
+  FantasyPoints           Decimal @db.Decimal(4, 1)
+  Minutes                 Int
+  FieldGoalsMade          Decimal @db.Decimal(4, 1)
+  FieldGoalsAttempted     Decimal @db.Decimal(4, 1)
+  FieldGoalsPercentage    Decimal @db.Decimal(4, 1)
+  TwoPointersMade         Decimal @db.Decimal(4, 1)
+  TwoPointersAttempted    Decimal @db.Decimal(4, 1)
+  TwoPointersPercentage   Decimal @db.Decimal(4, 1)
+  ThreePointersMade       Decimal @db.Decimal(4, 1)
+  ThreePointersAttempted  Decimal @db.Decimal(4, 1)
+  ThreePointersPercentage Decimal @db.Decimal(4, 1)
+  FreeThrowsMade          Decimal @db.Decimal(4, 1)
+  FreeThrowsAttempted     Decimal @db.Decimal(4, 1)
+  FreeThrowsPercentage    Decimal @db.Decimal(4, 1)
+  OffensiveRebounds       Decimal @db.Decimal(4, 1)
+  DefensiveRebounds       Decimal @db.Decimal(4, 1)
+  Rebounds                Decimal @db.Decimal(4, 1)
+  Assists                 Decimal @db.Decimal(4, 1)
+  Steals                  Decimal @db.Decimal(4, 1)
+  BlockedShots            Decimal @db.Decimal(4, 1)
+  Turnovers               Decimal @db.Decimal(4, 1)
+  PersonalFouls           Decimal @db.Decimal(4, 1)
+  Points                  Decimal @db.Decimal(4, 1)
+  FantasyPointsFanDuel    Decimal @db.Decimal(4, 1)
+  FantasyPointsDraftKings Decimal @db.Decimal(4, 1)
+  FantasyPointsYahoo      Decimal @db.Decimal(4, 1)
+  PlusMinus               Decimal @db.Decimal(4, 1)
+}
+
+model LastFiveGameAverages {
+  PlayerID                Int     @id
+  player                  Player  @relation(fields: [PlayerID], references: [PlayerID])
+  FantasyPoints           Decimal @db.Decimal(4, 1)
+  Minutes                 Int
+  FieldGoalsMade          Decimal @db.Decimal(4, 1)
+  FieldGoalsAttempted     Decimal @db.Decimal(4, 1)
+  FieldGoalsPercentage    Decimal @db.Decimal(4, 1)
+  TwoPointersMade         Decimal @db.Decimal(4, 1)
+  TwoPointersAttempted    Decimal @db.Decimal(4, 1)
+  TwoPointersPercentage   Decimal @db.Decimal(4, 1)
+  ThreePointersMade       Decimal @db.Decimal(4, 1)
+  ThreePointersAttempted  Decimal @db.Decimal(4, 1)
+  ThreePointersPercentage Decimal @db.Decimal(4, 1)
+  FreeThrowsMade          Decimal @db.Decimal(4, 1)
+  FreeThrowsAttempted     Decimal @db.Decimal(4, 1)
+  FreeThrowsPercentage    Decimal @db.Decimal(4, 1)
+  OffensiveRebounds       Decimal @db.Decimal(4, 1)
+  DefensiveRebounds       Decimal @db.Decimal(4, 1)
+  Rebounds                Decimal @db.Decimal(4, 1)
+  Assists                 Decimal @db.Decimal(4, 1)
+  Steals                  Decimal @db.Decimal(4, 1)
+  BlockedShots            Decimal @db.Decimal(4, 1)
+  Turnovers               Decimal @db.Decimal(4, 1)
+  PersonalFouls           Decimal @db.Decimal(4, 1)
+  Points                  Decimal @db.Decimal(4, 1)
+  FantasyPointsFanDuel    Decimal @db.Decimal(4, 1)
+  FantasyPointsDraftKings Decimal @db.Decimal(4, 1)
+  FantasyPointsYahoo      Decimal @db.Decimal(4, 1)
+  PlusMinus               Decimal @db.Decimal(4, 1)
 }
