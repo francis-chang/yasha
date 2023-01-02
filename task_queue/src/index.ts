@@ -30,7 +30,7 @@ if (process.env.REDIS_BULLMQ_URL) {
         })
     })()
 
-    statsqueue.add('loadTopStatlines', { numberOfDaysAgo: 10, numberOfStatlines: 20 })
+    statsqueue.add('loadTopAverages', null)
 } else {
     console.log('env var TQ_STATS_URL not found, please check bull service in docker-compose.yml')
 }

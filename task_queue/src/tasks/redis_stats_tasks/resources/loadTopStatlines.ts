@@ -28,16 +28,20 @@ export default async (numberOfDaysAgo: number, numberOfStatlines: number) => {
 
     const response = await wrapPrismaQuery(() => getTopStatlines(numberOfDaysAgo, numberOfStatlines))
     if (response) {
+        const now = new Date().toISOString()
         if (numberOfDaysAgo === DEFAULT_NUM_DAYS && numberOfStatlines === DEFAULT_NUM_STATLINES) {
             try {
-                await redisClient.set('TOP_STATLINES', JSON.stringify(response))
+                await redisClient.set('TOP_STATLINES', JSON.stringify({ statlines: response, updated: now }))
                 logger.info('TOP_STATLINES HAVE BEEN SET')
             } catch (err) {
                 logger.error(err)
             }
         } else {
             try {
-                await redisClient.set(`TOP_STATLINES_${numberOfDaysAgo}_${numberOfStatlines}`, JSON.stringify(response))
+                await redisClient.set(
+                    `TOP_STATLINES_${numberOfDaysAgo}_${numberOfStatlines}`,
+                    JSON.stringify({ statlines: response, updated: now })
+                )
                 logger.info(`TOP_STATLINES_${numberOfDaysAgo}_${numberOfStatlines} HAVE BEEN SET`)
             } catch (err) {
                 logger.error(err)
