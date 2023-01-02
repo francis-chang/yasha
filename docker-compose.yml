@@ -21,6 +21,7 @@ services:
     environment:
       - PG_URL=${PG_URL}
       - REDIS_BULLMQ_URL=${REDIS_BULLMQ_URL}
+      - REDIS_DATA_URL=${REDIS_DATA_URL}
     volumes:
       - ./api:/src
     ports:

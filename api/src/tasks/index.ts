@@ -8,6 +8,12 @@ const addToQueue = (name: string, data: any) => {
     }
 }
 
+// loadTopStatlines(job.data.numberOfDaysAgo, job.data.numberOfStatlines)
+
+const loadTopStatlines = async (numberOfDaysAgo: number, numberOfStatlines: number) => {
+    addToQueue('loadTopStatlines', { numberOfDaysAgo, numberOfStatlines })
+}
+
 const seedGetTeams = async () => {
     addToQueue('seedGetTeams', null)
 }
@@ -27,4 +33,4 @@ const seedGetPlayers = async () => {
     addToQueue('seedGetPlayers', null)
 }
 
-export { seedGetTeams, seedGetReferees, seedGetGames, seedGetBoxScore, seedGetPlayers }
+export { seedGetTeams, seedGetReferees, seedGetGames, seedGetBoxScore, seedGetPlayers, loadTopStatlines }
