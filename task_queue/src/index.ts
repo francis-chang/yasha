@@ -25,12 +25,12 @@ if (process.env.REDIS_BULLMQ_URL) {
     })
     ;(async () => {
         const jobs = await statsqueue.getRepeatableJobs()
-        jobs.forEach((job) => {
-            statsqueue.removeRepeatableByKey(job.key)
+        jobs.forEach(async (job) => {
+            await statsqueue.removeRepeatableByKey(job.key)
         })
+        await statsqueue.add('updateBoxScoreMinute', null, { repeat: { every: 60000 } })
+        await statsqueue.add('updateBoxScoreThreeSeconds', null, { repeat: { every: 3000 } })
     })()
-
-    statsqueue.add('loadTopAverages', null)
 } else {
     console.log('env var TQ_STATS_URL not found, please check bull service in docker-compose.yml')
 }

@@ -36,6 +36,7 @@ model Game {
   Status               String
   Channel              String
   Day                  DateTime
+  nba_day              String          @default("")
   DateTime             DateTime
   AwayTeamID           Int
   HomeTeamID           Int

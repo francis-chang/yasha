@@ -92,6 +92,20 @@ const getBoxScore = async (GameID: number | string) => {
     return response
 }
 
+const getBoxScoreByDate = async (date: string) => {
+    const response = await apiCall<BoxScoreResponse[]>(`stats/json/BoxScores/${date}`)
+    return response
+}
+const getBoxScoreByDateDelta = async (date: string) => {
+    const response = await apiCall<BoxScoreResponse[]>(`stats/json/BoxScoresDelta/${date}/2`)
+    return response
+}
+
+const getPlayer = async (PlayerID: number) => {
+    const response = await apiCall<PlayerResponse>(`scores/json/Player/${PlayerID}`)
+    return response
+}
+
 /**
  * if it is 1am in EST 1/3 and numberOfDays is 3
  * then this will return 1/3, 1/2, 1,1
@@ -126,4 +140,15 @@ const getGameIDsPastDays = async (numberOfDays: number) => {
     return null
 }
 
-export { getAllNBATeams, getStadiums, getSchedule, getReferees, getBoxScore, getPlayers, getGameIDsPastDays }
+export {
+    getAllNBATeams,
+    getStadiums,
+    getSchedule,
+    getReferees,
+    getBoxScore,
+    getPlayers,
+    getGameIDsPastDays,
+    getBoxScoreByDate,
+    getBoxScoreByDateDelta,
+    getPlayer,
+}
