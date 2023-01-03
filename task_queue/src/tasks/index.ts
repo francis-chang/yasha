@@ -1,5 +1,5 @@
 import { Job } from 'bullmq'
-import { loadBoxScores, loadSingleDayStatlines, loadTopAverages, loadTopStatlines } from './redis_stats_tasks'
+import { loadGameInfo, loadSingleDayStatlines, loadTopAverages, loadTopStatlines } from './redis_stats_tasks'
 import { updateBoxScoreMinute, updateBoxScoreThreeSeconds, updateInjuries, updateStandings } from './scheduled_tasks'
 import { getTeams, getReferees, getGames, getBoxScore, getPlayers } from './seed_db_tasks'
 import {
@@ -12,19 +12,55 @@ import {
     addPlayer,
 } from './tasks'
 
+const productionSwitch = async (job: Job) => {
+    switch (job.name) {
+        // every 10 minutes
+        case 'updateInjuries':
+            updateInjuries()
+            break
+        // every 10 seconds
+        case 'loadSingleDayStatlines':
+            loadSingleDayStatlines()
+            break
+        // every 10 minutes
+        case 'updateStandings':
+            updateStandings()
+            break
+        // every minute
+        case 'loadGameInfo':
+            loadGameInfo()
+            break
+        // every 5 seconds
+        case 'updateBoxScoreThreeSeconds':
+            updateBoxScoreThreeSeconds()
+            break
+        // every minute
+        // if status = final -> final loadboxscore
+        case 'updateBoxScoreMinute':
+            updateBoxScoreMinute()
+            break
+        case 'updateAverages':
+            updateAverages(job.data)
+            break
+        case 'loadBoxScore':
+            await loadBoxScore(job.data)
+            break
+    }
+}
+
 export default async (job: Job) => {
     switch (job.name) {
         case 'updateInjuries':
             updateInjuries()
             break
-        case 'loadSingleDayStatlines':
-            loadSingleDayStatlines(job.data)
-            break
+        // case 'loadSingleDayStatlines':
+        //     loadSingleDayStatlines(job.data)
+        //     break
         case 'updateStandings':
             updateStandings()
             break
-        case 'loadBoxScores':
-            loadBoxScores()
+        case 'loadGameInfo':
+            loadGameInfo()
             break
         case 'addPlayer':
             addPlayer(job.data)

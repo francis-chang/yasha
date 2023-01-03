@@ -2,6 +2,7 @@ import { prismaClient, wrapPrismaQuery } from '../../../utils/prismaClient'
 import logger from '../../../utils/logger'
 import statlineSchema from './statlineSchema'
 import redisClient from '../../../utils/redisClient'
+import { formatInTimeZone } from 'date-fns-tz'
 
 const findStatlines = async (date: string) => {
     return await prismaClient.statline.findMany({
@@ -45,7 +46,9 @@ const makePercentages = (response: any) => {
     }
 }
 
-export default async (date: string) => {
+export default async () => {
+    const d = new Date()
+    const date = formatInTimeZone(d, 'America/Los_Angeles', 'yyyy-MMM-dd')
     const response = await wrapPrismaQuery(() => findStatlines(date))
     if (response) {
         const formattedStatline = response.map(makePercentages)

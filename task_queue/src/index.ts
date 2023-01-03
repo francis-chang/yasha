@@ -29,7 +29,7 @@ if (process.env.REDIS_BULLMQ_URL) {
             await statsqueue.removeRepeatableByKey(job.key)
         })
 
-        statsqueue.add('updateInjuries', '2023-Jan-02')
+        // statsqueue.add('loadStatsByNumDays', 2)
         // statsqueue.add('updateStandings', null)
         // statsqueue.add('loadBoxScore', 18729)
         // await statsqueue.add('loadTopStatlines', { numberOfDaysAgo: 10, numberOfStatlines: 20 })

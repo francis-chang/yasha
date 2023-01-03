@@ -53,9 +53,9 @@ export default async (GameID: number) => {
 
         // delay is added because adding boxscores and statlines may take a while
         // if race condition is still not satisfied within 10 seconds, sanity check updating all averages will happen hourly
-        gameResponse.PlayerGames.map(({ PlayerID }) => statsqueue.add('updateAverages', PlayerID, { delay: 50000 }))
+        gameResponse.PlayerGames.map(({ PlayerID }) => statsqueue.add('updateAverages', PlayerID, { delay: 5000 }))
         gameResponse.PlayerGames.map(({ PlayerID }) =>
-            statsqueue.add('updateLastFiveAverages', PlayerID, { delay: 50000 })
+            statsqueue.add('updateLastFiveAverages', PlayerID, { delay: 5000 })
         )
 
         try {

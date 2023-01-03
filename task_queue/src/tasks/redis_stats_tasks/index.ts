@@ -1,6 +1,6 @@
-import loadBoxScores from './resources/loadBoxScores'
+import loadGameInfo from './resources/loadGameInfo'
 import loadSingleDayStatlines from './resources/loadSingleDayStatlines'
 import loadTopAverages from './resources/loadTopAverages'
 import loadTopStatlines from './resources/loadTopStatlines'
 
-export { loadTopStatlines, loadTopAverages, loadBoxScores, loadSingleDayStatlines }
+export { loadTopStatlines, loadTopAverages, loadGameInfo, loadSingleDayStatlines }
