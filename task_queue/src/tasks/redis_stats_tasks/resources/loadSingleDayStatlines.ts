@@ -1,21 +1,15 @@
-import redisClient from '../../../utils/redisClient'
 import { prismaClient, wrapPrismaQuery } from '../../../utils/prismaClient'
 import logger from '../../../utils/logger'
-import averagesSchema from './averagesSchema'
+import statlineSchema from './statlineSchema'
+import redisClient from '../../../utils/redisClient'
 
-const getTopAverages = async () => {
-    const seasonPromise = prismaClient.seasonAverages.findMany({
+const findStatlines = async (date: string) => {
+    return await prismaClient.statline.findMany({
+        where: { game: { nba_day: date } },
         orderBy: { FantasyPoints: 'desc' },
-        select: averagesSchema,
+        select: statlineSchema,
         take: 20,
     })
-    const lastFivePromise = prismaClient.lastFiveGameAverages.findMany({
-        orderBy: { FantasyPoints: 'desc' },
-        select: averagesSchema,
-        take: 20,
-    })
-
-    return await Promise.all([seasonPromise, lastFivePromise])
 }
 
 const makeNameSmaller = (FirstName: string, LastName: string) => {
@@ -51,19 +45,13 @@ const makePercentages = (response: any) => {
     }
 }
 
-export default async () => {
-    const response = await wrapPrismaQuery(getTopAverages)
-    const now = new Date().toISOString()
-
+export default async (date: string) => {
+    const response = await wrapPrismaQuery(() => findStatlines(date))
     if (response) {
-        const newObj = {
-            seasonAverages: response[0].map(makePercentages),
-            lastFiveAverages: response[1].map(makePercentages),
-            updated: now,
-        }
+        const formattedStatline = response.map(makePercentages)
         try {
-            await redisClient.set('TOP_AVERAGES', JSON.stringify(newObj))
-            logger.info('TOP_AVERAGES HAVE BEEN SET')
+            await redisClient.set(`TOP_STATLINES_${date}`.toUpperCase(), JSON.stringify(formattedStatline))
+            logger.info(`TOP_STATLINES_${date} has been set`)
         } catch (err) {
             logger.error(err)
         }

@@ -13,6 +13,8 @@ import {
     PlayerResponse,
 } from './types'
 import logger from './logger'
+import { formatInTimeZone } from 'date-fns-tz'
+import { TeamStanding } from './types/resources/StandingsResponse'
 
 const scoresBase = axios.create({
     baseURL: 'https://api.sportsdata.io/v3/nba/',
@@ -60,6 +62,11 @@ const apiCall = async <T>(url: string): Promise<T | null> => {
         }
         return null
     }
+}
+
+const getStandings = async () => {
+    const response = await apiCall<TeamStanding[]>('scores/json/Standings/2023')
+    return response
 }
 
 const getAllNBATeams = async () => {
@@ -119,10 +126,7 @@ const getGameIDsPastDays = async (numberOfDays: number) => {
     const days = []
     // starts from -1 because usually they have some game information already updated
     for (let i = -1; i < numberOfDays; i++) {
-        const currentTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-        const currentUTCDate = new Date()
-        const date = subDays(utcToZonedTime(currentUTCDate, currentTimeZone, { timeZone: 'America/New_York' }), i)
-        const formattedDate = format(date, 'yyyy-LLL-dd')
+        const formattedDate = formatInTimeZone(subDays(new Date(), i), 'America/Los_Angeles', 'yyyy-MMM-dd')
         days.push(formattedDate)
     }
     const calls = days.map((day) => {
@@ -151,4 +155,5 @@ export {
     getBoxScoreByDate,
     getBoxScoreByDateDelta,
     getPlayer,
+    getStandings,
 }

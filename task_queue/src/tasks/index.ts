@@ -1,6 +1,6 @@
 import { Job } from 'bullmq'
-import { loadTopAverages, loadTopStatlines } from './redis_stats_tasks'
-import { updateBoxScoreMinute, updateBoxScoreThreeSeconds } from './scheduled_tasks'
+import { loadBoxScores, loadSingleDayStatlines, loadTopAverages, loadTopStatlines } from './redis_stats_tasks'
+import { updateBoxScoreMinute, updateBoxScoreThreeSeconds, updateStandings } from './scheduled_tasks'
 import { getTeams, getReferees, getGames, getBoxScore, getPlayers } from './seed_db_tasks'
 import {
     loadBoxScore,
@@ -14,6 +14,15 @@ import {
 
 export default async (job: Job) => {
     switch (job.name) {
+        case 'loadSingleDayStatlines':
+            loadSingleDayStatlines(job.data)
+            break
+        case 'updateStandings':
+            updateStandings()
+            break
+        case 'loadBoxScores':
+            loadBoxScores()
+            break
         case 'addPlayer':
             addPlayer(job.data)
             break

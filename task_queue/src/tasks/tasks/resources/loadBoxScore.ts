@@ -42,43 +42,28 @@ const createStatline = async (statline: StatlineResponse) => {
     }
 }
 
-export default async (GameIDs: number[]) => {
-    const GameIDsCopy = GameIDs.slice()
-    const GameID = GameIDsCopy.pop()
-    if (!GameID) {
-        logger.info('BoxScore Finished')
-    } else {
-        const gameResponse = await getBoxScore(GameID)
-        if (gameResponse) {
-            const promises = [
-                ...gameResponse.TeamGames.map((teamStat) => wrapPrismaQuery(() => createTeamStatline(teamStat))),
-                ...gameResponse.PlayerGames.map((statline) => wrapPrismaQuery(() => createStatline(statline))),
-                wrapPrismaQuery(() => updateGame(GameID, gameResponse)),
-            ]
+export default async (GameID: number) => {
+    const gameResponse = await getBoxScore(GameID)
+    if (gameResponse) {
+        const promises = [
+            ...gameResponse.TeamGames.map((teamStat) => wrapPrismaQuery(() => createTeamStatline(teamStat))),
+            ...gameResponse.PlayerGames.map((statline) => wrapPrismaQuery(() => createStatline(statline))),
+            wrapPrismaQuery(() => updateGame(GameID, gameResponse)),
+        ]
 
-            // delay is added because adding boxscores and statlines may take a while
-            // if race condition is still not satisfied within 10 seconds, sanity check updating all averages will happen hourly
-            const averagesPromises = gameResponse.PlayerGames.map(({ PlayerID }) =>
-                statsqueue.add('updateAverages', PlayerID, { delay: 10000 })
-            )
-            const lastFiveAveragesPromises = gameResponse.PlayerGames.map(({ PlayerID }) =>
-                statsqueue.add('updateLastFiveAverages', PlayerID, { delay: 10000 })
-            )
-            try {
-                await Promise.all(promises)
-                await Promise.all(averagesPromises)
-                await Promise.all(lastFiveAveragesPromises)
-            } catch (err) {
-                console.error(err)
-            }
-        }
+        // delay is added because adding boxscores and statlines may take a while
+        // if race condition is still not satisfied within 10 seconds, sanity check updating all averages will happen hourly
+        gameResponse.PlayerGames.map(({ PlayerID }) => statsqueue.add('updateAverages', PlayerID, { delay: 50000 }))
+        gameResponse.PlayerGames.map(({ PlayerID }) =>
+            statsqueue.add('updateLastFiveAverages', PlayerID, { delay: 50000 })
+        )
 
-        logger.info(`${GameID} being processed`)
-        if (GameIDsCopy.length > 0) {
-            logger.info(`${GameIDsCopy.length} more games to process box scores`)
-            await statsqueue.add('loadBoxScore', GameIDsCopy, { delay: 3000 })
-        } else {
-            logger.info('Finished processing all box scores')
+        try {
+            await Promise.all(promises)
+        } catch (err) {
+            console.error(err)
         }
     }
+
+    logger.info(`${GameID} being processed`)
 }
