@@ -33,13 +33,41 @@ axiosRetry(scoresBase, {
 })
 
 const projectionsBase = axios.create({
-    baseURL: 'https://api.sportsdata.io/v3/nba/',
+    baseURL: 'https://api.sportsdata.io/v3/nba/projections/',
     timeout: 30000,
     headers: {
         'Content-Type': 'application/json',
         'Ocp-Apim-Subscription-Key': process.env.SPORTSDATA_PROJECTIONS_KEY,
     },
 })
+
+const projectionsApiCall = async <T>(url: string): Promise<T | null> => {
+    try {
+        const response = await projectionsBase.get<T, any>(url)
+        return response.data
+    } catch (err: any) {
+        logger.error(`error fetching ${url}`)
+        if (err.response) {
+            logger.error(err.response.data)
+            logger.error(err.response.status)
+            logger.error(err.response.headers)
+        } else if (err.request) {
+            // The request was made but no response was received
+            // `err.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            logger.error(err.request)
+        } else {
+            // Something happened in setting up the request that triggered an err
+            logger.error(err.message)
+        }
+        return null
+    }
+}
+
+const getInjuries = async () => {
+    const response = await projectionsApiCall<PlayerResponse[]>('json/InjuredPlayers')
+    return response
+}
 
 const apiCall = async <T>(url: string): Promise<T | null> => {
     try {
@@ -156,4 +184,5 @@ export {
     getBoxScoreByDateDelta,
     getPlayer,
     getStandings,
+    getInjuries,
 }
