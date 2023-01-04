@@ -53,9 +53,9 @@ export default async (job: Job) => {
         case 'updateInjuries':
             updateInjuries()
             break
-        // case 'loadSingleDayStatlines':
-        //     loadSingleDayStatlines(job.data)
-        //     break
+        case 'loadSingleDayStatlines':
+            loadSingleDayStatlines()
+            break
         case 'updateStandings':
             updateStandings()
             break

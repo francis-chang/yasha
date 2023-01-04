@@ -4,6 +4,7 @@ import logger from '../../../utils/logger'
 import { getBoxScoreByDate } from '../../../utils/api'
 import { BoxScoreResponse, StatlineResponse, TeamStatlineResponse } from '../../../utils/types'
 import { parseStatResponseToPrisma, parseTeamStatResponseToPrisma } from '../../tasks/resources/loadBoxScoreHelper'
+import statsqueue from '../../../utils/bullmqProducer'
 
 const updateGame = async (GameID: number, boxScore: BoxScoreResponse) => {
     return prismaClient.game.update({
@@ -53,7 +54,11 @@ export default async () => {
                 wrapPrismaQuery(() => updateGame(boxScore.Game.GameID, boxScore)),
             ]
             await Promise.all(promises)
+            if (boxScore.Game.Status !== 'Scheduled' && boxScore.Game.Status !== 'InProgress') {
+                statsqueue.add('loadBoxScore', boxScore.Game.GameID)
+            }
         })
+
         logger.info('games loaded')
     }
 }
