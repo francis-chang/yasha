@@ -29,12 +29,12 @@ if (process.env.REDIS_BULLMQ_URL) {
             await statsqueue.removeRepeatableByKey(job.key)
         })
 
-        await statsqueue.add('updateInjuries', null, { repeat: { every: 600000 } })
-        await statsqueue.add('loadSingleDayStatlines', null, { repeat: { every: 10000 } })
-        await statsqueue.add('updateStandings', null, { repeat: { every: 600000 } })
-        await statsqueue.add('updateBoxScoreMinute', null, { repeat: { every: 100000 } })
-        await statsqueue.add('updateBoxScoreThreeSeconds', null, { repeat: { every: 5000 } })
-        await statsqueue.add('loadGameInfo', null, { repeat: { every: 60000 } })
+        // await statsqueue.add('updateInjuries', null, { repeat: { every: 600000 } })
+        // await statsqueue.add('loadSingleDayStatlines', null, { repeat: { every: 10000 } })
+        // await statsqueue.add('updateStandings', null, { repeat: { every: 600000 } })
+        // await statsqueue.add('updateBoxScoreMinute', null, { repeat: { every: 100000 } })
+        // await statsqueue.add('updateBoxScoreThreeSeconds', null, { repeat: { every: 5000 } })
+        // await statsqueue.add('loadGameInfo', null, { repeat: { every: 60000 } })
         // await statsqueue.add('loadGameInfo', null, { repeat: { every: 10000 } })
     })()
 } else {

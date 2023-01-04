@@ -19,6 +19,13 @@ export default async () => {
     const response = await wrapPrismaQuery(getAllFinishedGames)
     if (response) {
         const GameIDs = response.map((element) => element.GameID)
-        await statsqueue.add('loadBoxScore', GameIDs)
+        GameIDs.forEach((game, n) => {
+            setTimeout(async () => {
+                await statsqueue.add('loadBoxScore', game)
+                const totalSeconds = response.length
+                logger.info(`approx ${totalSeconds - n} s to go`)
+            }, n * 1000)
+        })
+        // await statsqueue.add('loadBoxScore', GameIDs)
     }
 }
