@@ -1,9 +1,11 @@
 import express, { ErrorRequestHandler, Request, Response, NextFunction } from 'express'
 import redisStatsRouter from './redis_stats'
+import seedDatabaseRouter from './seed_db'
 
 const defaultRouter = express.Router()
 
 defaultRouter.use('/redis_stats', redisStatsRouter)
+defaultRouter.use('/seed/', seedDatabaseRouter)
 // defaultRouter.use('/game', gameRouter)
 // defaultRouter.use('/user', userRouter)
 // defaultRouter.use('/stats', statRouter)
