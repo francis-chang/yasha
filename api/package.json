@@ -4,9 +4,10 @@
     "description": "",
     "main": "index.js",
     "scripts": {
+        "generate": "npx prisma generate --schema=./src/prisma/schema.prisma",
         "build": "npx tsc",
         "start": "pm2 start dist/index.js",
-        "dev": "nodemon src/index.ts"
+        "dev": " src/index.ts"
     },
     "author": "",
     "license": "ISC",
