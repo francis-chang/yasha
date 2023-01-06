@@ -113,6 +113,7 @@ model Player {
   Position                            String
   FirstName                           String
   LastName                            String
+  s_name                              String                @default("")
   Height                              Int
   Weight                              Int
   BirthDate                           String

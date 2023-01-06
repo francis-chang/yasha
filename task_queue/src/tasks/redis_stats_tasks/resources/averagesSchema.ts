@@ -28,6 +28,7 @@ export default {
             Jersey: true,
             FirstName: true,
             LastName: true,
+            s_name: true,
             team: {
                 select: {
                     TeamID: true,
