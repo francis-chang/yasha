@@ -1,7 +1,7 @@
 import { Job } from 'bullmq'
 import { loadGameInfo, loadSingleDayStatlines, loadTopAverages, loadTopStatlines } from './redis_stats_tasks'
 import { updateBoxScoreMinute, updateBoxScoreThreeSeconds, updateInjuries, updateStandings } from './scheduled_tasks'
-import { getTeams, getReferees, getGames, getBoxScore, getPlayers } from './seed_db_tasks'
+import { getTeams, getReferees, getGames, getBoxScore, getPlayers, updateDates } from './seed_db_tasks'
 import {
     loadBoxScore,
     testTask,
@@ -50,6 +50,9 @@ const productionSwitch = async (job: Job) => {
 
 export default async (job: Job) => {
     switch (job.name) {
+        case 'updateDates':
+            updateDates()
+            break
         case 'updateInjuries':
             updateInjuries()
             break

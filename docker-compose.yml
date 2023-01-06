@@ -18,6 +18,8 @@ services:
       context: ./api
       dockerfile: Dockerfile.dev
     restart: unless-stopped
+    env_file:
+      - ./z_env/api.env
     environment:
       - PG_URL=${PG_URL}
       - REDIS_BULLMQ_URL=${REDIS_BULLMQ_URL}

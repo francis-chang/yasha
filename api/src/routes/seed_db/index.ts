@@ -1,59 +1,23 @@
 import statsqueue from '../../tasks/producer'
 
 import express from 'express'
+import logger from '../../utils/logger'
 
 const seedDatabaseRouter = express.Router()
 
-// case 'seedGetPlayers':
-//     await getPlayers()
-//     break
-// case 'seedGetBoxScore':
-//     await getBoxScore()
-//     break
-// case 'seedGetTeams':
-//     await getTeams()
-//     break
-// case 'seedGetReferees':
-//     await getReferees()
-//     break
-// case 'seedGetGames':
-//     await getGames()
-//     break
-
-seedDatabaseRouter.get('/getteams', (req, res) => {
-    statsqueue.add('seedGetTeams', null)
-    res.status(200).json({ msg: 'TASK SENT' })
-})
-
-seedDatabaseRouter.get('/getrefs', (req, res) => {
-    statsqueue.add('seedGetReferees', null)
-    res.status(200).json({ msg: 'TASK SENT' })
-})
-
-seedDatabaseRouter.get('/getGames', (req, res) => {
-    statsqueue.add('seedGetGames', null)
-    res.status(200).json({ msg: 'TASK SENT' })
-})
-
-seedDatabaseRouter.get('/getplayers', (req, res) => {
-    statsqueue.add('seedGetPlayers', null)
-    res.status(200).json({ msg: 'TASK SENT' })
-})
-
-seedDatabaseRouter.get('/getboxscore', (req, res) => {
-    statsqueue.add('seedGetBoxScore', null)
-    res.status(200).json({ msg: 'TASK SENT' })
-})
-
-seedDatabaseRouter.get('/settesttask', (req, res) => {
-    statsqueue.add('testTask', null)
-    res.status(200).json({ msg: 'TASK SENT' })
-})
-
-seedDatabaseRouter.get('/loadstatsdays/:days', (req, res) => {
-    const { days } = req.params
-    statsqueue.add('loadStatsByNumDays', days)
-    res.status(200).json({ msg: 'TASK SENT' })
+seedDatabaseRouter.post('/settask/:name', (req, res) => {
+    const { name } = req.params
+    if (!name) {
+        res.status(400).json({ msg: 'no name provided for task' })
+    } else {
+        const { key, data } = req.body
+        if (process.env.SETTASK_PASSWORD && key === process.env.SETTASK_PASSWORD) {
+            statsqueue.add(name, data)
+            res.status(201).json({ msg: `TASK ${name} HAS BEEN SENT` })
+        } else {
+            res.status(401).json({ msg: 'UNAUTHORIZED' })
+        }
+    }
 })
 
 export default seedDatabaseRouter

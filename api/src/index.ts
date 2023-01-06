@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { json } from 'express'
 import pino from 'pino-http'
 import defaultRouter from './routes'
 import cors from 'cors'
@@ -7,8 +7,15 @@ import { seedGetTeams, seedGetReferees, seedGetGames, seedGetBoxScore, seedGetPl
 const app = express()
 const PORT = process.env.API_PORT ? process.env.API_PORT : 3000
 
-app.use(pino())
+app.use(
+    pino({
+        transport: {
+            target: 'pino-pretty',
+        },
+    })
+)
 app.use(cors())
+app.use(json())
 app.use(defaultRouter)
 
 app.listen(PORT, async () => {
