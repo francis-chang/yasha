@@ -10,6 +10,7 @@ import {
     updateAllAverages,
     updateLastFiveAverages,
     addPlayer,
+    loadDraftListForMock,
 } from './tasks'
 
 const productionSwitch = async (job: Job) => {
@@ -50,6 +51,9 @@ const productionSwitch = async (job: Job) => {
 
 export default async (job: Job) => {
     switch (job.name) {
+        case 'loadDraftListForMock':
+            loadDraftListForMock()
+            break
         case 'updateSmallName':
             updateSmallName()
             break

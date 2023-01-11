@@ -13,7 +13,14 @@ app.use(
         },
     })
 )
-app.use(cors())
+
+const corsOptions = {
+    origin: ['http://localhost:3333', 'http://localhost:5173'],
+    methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
+    credentials: true,
+}
+
+app.use(cors(corsOptions))
 app.use(json())
 app.use(defaultRouter)
 

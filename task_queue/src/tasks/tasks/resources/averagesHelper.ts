@@ -1,7 +1,7 @@
 import { Prisma } from '@prisma/client'
 import { Decimal } from '@prisma/client/runtime'
 
-const formatAverageData = (data: { [key: string]: Decimal | null }) => {
+const formatAverageData = (data: { [key: string]: Decimal | null | number }) => {
     return {
         FantasyPoints: data.FantasyPoints ? data.FantasyPoints : 0,
         FieldGoalsMade: data.FieldGoalsMade ? data.FieldGoalsMade : 0,

@@ -28,6 +28,8 @@ services:
       - ./api:/src
     ports:
       - ${API_PORT}:${API_PORT}
+    depends_on:
+      - redis
 
   redis:
     image: redis:7
