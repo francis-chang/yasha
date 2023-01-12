@@ -3,8 +3,16 @@ import statsqueue from '../../tasks/producer'
 import express, { json } from 'express'
 import logger from '../../utils/logger'
 import redisClient from '../../utils/redisClient'
+import draft from './draft'
 
 const mockDraftRouter = express.Router()
+
+// const initialState = {
+//     teams,
+//     picked: null,
+//     round: 0,
+//     draftFinished: false,
+// } as { draftFinished: boolean; teams: TeamElement[]; picked: null | MockDraftPlayer; round: number }
 
 // [
 //     { name: 'AdamAI', team: [] },
@@ -81,6 +89,7 @@ const botPick = (draftList: FilteredDraftedPlayer[], filterList: number[]) => {
         return newDraftList[random]
     }
 }
+mockDraftRouter.post('/d', draft)
 
 mockDraftRouter.post('/draft', async (req, res) => {
     const draftListString = await redisClient.get('MOCK_DRAFT_LIST')

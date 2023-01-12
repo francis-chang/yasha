@@ -48,6 +48,13 @@ export default async () => {
             FantasyPoints: parseFloat(`${player.FantasyPoints}`),
         }))
         redisClient.set('MOCK_DRAFT_LIST', JSON.stringify(parsedList))
+        const filteredDraftList = parsedList.map((player, n: number) => ({
+            PlayerID: player.PlayerID,
+            name: player.player.s_name,
+            n,
+        }))
+        redisClient.set('MOCK_DRAFT_LIST_FOR_PICK', JSON.stringify(filteredDraftList))
+
         logger.info('MOCK_DRAFT_LIST HAS BEEN SET INTO REDIS')
     } else {
         logger.error('NO RESPONSE FROM PRISMA WHEN TRYING TO SET MOCK_DRAFT_LIST')
