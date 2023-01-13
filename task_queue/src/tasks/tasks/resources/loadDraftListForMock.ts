@@ -19,6 +19,7 @@ const getPlayersOrderByFan = async () => {
                     FirstName: true,
                     LastName: true,
                     s_name: true,
+                    Jersey: true,
                     team: {
                         select: {
                             City: true,
