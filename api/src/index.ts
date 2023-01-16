@@ -21,6 +21,8 @@ const corsOptions = {
         'http://47.148.96.183',
         'https://fty.gg',
         'https://app.fty.gg',
+        'http://164.92.105.119',
+        'http://159.203.186.40',
     ],
     methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
     credentials: true,
