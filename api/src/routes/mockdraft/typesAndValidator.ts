@@ -5,12 +5,16 @@ export const TeamPlayerSchema = z.object({
     name: z.string(),
     n: z.number(),
     pickedAt: z.number(),
+    pickedString: z.string(),
+    statlines: z.any().optional(),
 })
 
 export const TeamSchema = z.array(
     z.object({
         name: z.string(),
         team: z.array(TeamPlayerSchema),
+        totals: z.any().optional(),
+        rankings: z.any().optional(),
     })
 )
 

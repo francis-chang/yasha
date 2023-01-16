@@ -60,7 +60,7 @@ const draft = async (req: Request, res: Response, next: NextFunction) => {
             // numValidator.parse(picked)
         } catch (err) {
             logger.error(err)
-            res.status(500).json({
+            res.status(400).json({
                 msg: 'Something went wrong. Refresh the page to restart draft.',
                 desc: 'the request body was not valid',
             })
@@ -86,6 +86,7 @@ const draft = async (req: Request, res: Response, next: NextFunction) => {
                     n,
                     name,
                     pickedAt: currentPick,
+                    pickedString: `Round 1 Pick ${((currentPick - 1) % 12) + 1}`,
                 })
                 picked.push(PlayerID)
                 currentPick++
@@ -134,6 +135,7 @@ const draft = async (req: Request, res: Response, next: NextFunction) => {
                 n,
                 name,
                 pickedAt: currentPick,
+                pickedString: `Round ${Math.ceil(currentPick / 12)} Pick ${((currentPick - 1) % 12) + 1}`,
             })
             currentPick++
             allPickedPlayerIDs.push(PlayerID)
@@ -148,6 +150,7 @@ const draft = async (req: Request, res: Response, next: NextFunction) => {
                     n,
                     name,
                     pickedAt: currentPick,
+                    pickedString: `Round ${Math.ceil(currentPick / 12)} Pick ${((currentPick - 1) % 12) + 1}`,
                 })
                 currentPick++
                 allPickedPlayerIDs.push(PlayerID)
@@ -161,6 +164,7 @@ const draft = async (req: Request, res: Response, next: NextFunction) => {
                     n,
                     name,
                     pickedAt: currentPick,
+                    pickedString: `Round ${Math.ceil(currentPick / 12)} Pick ${((currentPick - 1) % 12) + 1}`,
                 })
                 currentPick++
                 allPickedPlayerIDs.push(PlayerID)
@@ -173,6 +177,7 @@ const draft = async (req: Request, res: Response, next: NextFunction) => {
                     n,
                     name,
                     pickedAt: currentPick,
+                    pickedString: `Round ${Math.ceil(currentPick / 12)} Pick ${((currentPick - 1) % 12) + 1}`,
                 })
                 currentPick++
                 allPickedPlayerIDs.push(PlayerID)
@@ -186,6 +191,7 @@ const draft = async (req: Request, res: Response, next: NextFunction) => {
                     n,
                     name,
                     pickedAt: currentPick,
+                    pickedString: `Round ${Math.ceil(currentPick / 12)} Pick ${((currentPick - 1) % 12) + 1}`,
                 })
                 currentPick++
                 allPickedPlayerIDs.push(PlayerID)
@@ -198,6 +204,7 @@ const draft = async (req: Request, res: Response, next: NextFunction) => {
                     n,
                     name,
                     pickedAt: currentPick,
+                    pickedString: `Round ${Math.ceil(currentPick / 12)} Pick ${((currentPick - 1) % 12) + 1}`,
                 })
                 currentPick++
                 allPickedPlayerIDs.push(PlayerID)

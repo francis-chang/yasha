@@ -1,6 +1,6 @@
 import { subDays } from 'date-fns'
 import { Request, Response, NextFunction } from 'express'
-import { loadTopStatlines } from '../../../tasks'
+import { loadTopStatlines } from '../../../utils/tasks'
 import redisClient from '../../../utils/redisClient'
 
 const getTopStatlines = async (req: Request, res: Response, next: NextFunction) => {

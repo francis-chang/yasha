@@ -1,4 +1,4 @@
-import statsqueue from '../../tasks/producer'
+import statsqueue from '../../utils/tasks/producer'
 
 import express from 'express'
 import logger from '../../utils/logger'
