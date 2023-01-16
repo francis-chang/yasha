@@ -15,7 +15,13 @@ app.use(
 )
 
 const corsOptions = {
-    origin: ['http://localhost:3333', 'http://localhost:5173', 'http://47.148.96.183', 'https://fty.gg'],
+    origin: [
+        'http://localhost:3333',
+        'http://localhost:5173',
+        'http://47.148.96.183',
+        'https://fty.gg',
+        'https://app.fty.gg',
+    ],
     methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
     credentials: true,
 }
