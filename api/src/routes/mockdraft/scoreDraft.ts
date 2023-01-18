@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express'
 import logger from '../../utils/logger'
 import { prismaClient, wrapPrismaQuery } from '../../utils/prismaClient'
 import { Team, TeamSchema } from './typesAndValidator'
+import format from 'date-fns/format'
 
 function getRandomIntegers(n: number): number[] {
     var randomNumbers = new Set<number>()
@@ -52,9 +53,18 @@ const findPlayerStats = async (PlayerID: number) => {
             },
             team: { select: { inner_color: true, outer_color: true } },
         },
+        orderBy: {
+            game: { nba_day: 'desc' },
+        },
     })
     const randomInts = getRandomIntegers(response.length - 1)
-    return { PlayerID, statlines: [response[randomInts[0]], response[randomInts[1]], response[randomInts[2]]] }
+    const statlines = [response[randomInts[0]], response[randomInts[1]], response[randomInts[2]]]
+    statlines.forEach((s) => {
+        const date = new Date(s.game.nba_day)
+        const formattedDate = format(date, 'M/d/yy')
+        ;(s.game as any).formattedDate = formattedDate
+    })
+    return { PlayerID, statlines }
 }
 
 const scoreDraft = async (req: Request, res: Response, next: NextFunction) => {
