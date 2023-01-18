@@ -54,7 +54,7 @@ const findPlayerStats = async (PlayerID: number) => {
             team: { select: { inner_color: true, outer_color: true } },
         },
         orderBy: {
-            game: { nba_day: 'desc' },
+            game: { DateTime: 'desc' },
         },
     })
     const randomInts = getRandomIntegers(response.length - 1)
