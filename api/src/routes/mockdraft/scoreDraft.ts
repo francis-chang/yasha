@@ -25,6 +25,7 @@ const findPlayerStats = async (PlayerID: number) => {
             ],
         },
         select: {
+            game: { select: { nba_day: true } },
             StatID: true,
             Points: true,
             Rebounds: true,

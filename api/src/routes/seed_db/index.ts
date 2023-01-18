@@ -1,7 +1,5 @@
 import statsqueue from '../../utils/tasks/producer'
-
 import express from 'express'
-import logger from '../../utils/logger'
 import redisClient from '../../utils/redisClient'
 
 const seedDatabaseRouter = express.Router()
