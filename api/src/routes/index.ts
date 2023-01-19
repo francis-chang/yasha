@@ -5,7 +5,7 @@ import mockDraftRouter from './mockdraft'
 
 const defaultRouter = express.Router()
 
-defaultRouter.use('/redis_stats', redisStatsRouter)
+defaultRouter.use('/rdata', redisStatsRouter)
 defaultRouter.use('/seed', seedDatabaseRouter)
 defaultRouter.use('/mockdraft', mockDraftRouter)
 // defaultRouter.use('/user', userRouter)
