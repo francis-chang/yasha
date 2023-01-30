@@ -1,4 +1,5 @@
 import express from 'express'
+import getFourDayScores from './resources/getFourDayScores'
 import getGameInfo from './resources/getGameInfo'
 import getMockDraftList from './resources/getMockDraft'
 import getTopAverages from './resources/getTopAverages'
@@ -12,5 +13,6 @@ redisStatsRouter.get('/topaverages', getTopAverages)
 redisStatsRouter.get('/gameinfo', getGameInfo)
 redisStatsRouter.get('/daystatlines/:date', getTopStatlinesForDay)
 redisStatsRouter.get('/getmockdraftlist', getMockDraftList)
+redisStatsRouter.get('/getfourdayscores', getFourDayScores)
 
 export default redisStatsRouter
