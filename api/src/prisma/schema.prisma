@@ -18,6 +18,7 @@ model Team {
   inner_color                  String
   outer_color                  String
   WikipediaLogoUrl             String
+  Score                        Int             @default(0)
   Wins                         Int
   Losses                       Int
   home_games                   Game[]          @relation("home_games")

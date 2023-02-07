@@ -29,16 +29,19 @@ const getGames = async () => {
                     AwayTeamScore: true,
                     HomeTeamScore: true,
                     Quarter: true,
+                    stadium: true,
                     TimeRemainingMinutes: true,
                     TimeRemainingSeconds: true,
                     away_team: {
                         select: {
                             Key: true,
+                            Score: true,
                         },
                     },
                     home_team: {
                         select: {
                             Key: true,
+                            Score: true,
                         },
                     },
                 },
@@ -48,8 +51,28 @@ const getGames = async () => {
     )
     responses.sort((a, b) => {
         const aDate = new Date(a.date)
-        const bDate = new Date(b.date)
-        return bDate.getDate() - aDate.getDate()
+        const bDate: Date = new Date(b.date)
+        return aDate.getTime() - bDate.getTime()
+    })
+
+    responses.forEach((day) => {
+        //@ts-ignore
+        day.games.sort((a: any, b: any) => {
+            let statusOrder = {
+                InProgress: 0,
+                Scheduled: 1,
+                Final: 2,
+                'F/OT': 2,
+            } as any
+            if (statusOrder[a.Status] === statusOrder[b.Status]) {
+                const aScore = a.home_team.Score + a.away_team.Score
+                const bScore = b.home_team.Score + b.away_team.Score
+                const score = bScore - aScore
+                return score
+            } else {
+                return statusOrder[a.Status] - statusOrder[b.Status]
+            }
+        })
     })
     return responses
 }
