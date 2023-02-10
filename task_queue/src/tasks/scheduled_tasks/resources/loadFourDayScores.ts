@@ -68,6 +68,7 @@ const getGames = async () => {
                 const aScore = a.home_team.Score + a.away_team.Score
                 const bScore = b.home_team.Score + b.away_team.Score
                 const score = bScore - aScore
+
                 return score
             } else {
                 return statusOrder[a.Status] - statusOrder[b.Status]

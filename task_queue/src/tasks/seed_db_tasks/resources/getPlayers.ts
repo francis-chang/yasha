@@ -19,7 +19,7 @@ const parseString = (element: null | string) => {
 }
 
 const parseInteger = (num: null | number) => {
-    if (!num) {
+    if (!num && num !== 0) {
         return -1
     } else {
         return num
@@ -30,7 +30,7 @@ const parsePlayers = (player: PlayerResponse) => {
     return {
         PlayerID: player.PlayerID,
         TeamID: player.TeamID,
-        Jersey: player.Jersey,
+        Jersey: parseInteger(player.Jersey),
         PositionCategory: player.PositionCategory,
         Position: player.Position,
         FirstName: player.FirstName,
@@ -72,7 +72,7 @@ const parsePlayers = (player: PlayerResponse) => {
 export default async () => {
     const response = await getPlayers()
     if (response) {
-        await createPlayers(response.map(parsePlayers))
+        await wrapPrismaQuery(() => createPlayers(response.map(parsePlayers)))
         logger.info('players have been updated to db')
     }
 }
