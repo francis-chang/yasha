@@ -47,7 +47,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
             })
 
             const shortenedTeams = finalTeams.map((t) => {
-                return { ...t, games: t.games.slice(0, num_games + 1) }
+                return { ...t, games: t.games.slice(0, num_games) }
             })
             return res.status(200).json(shortenedTeams)
         }
