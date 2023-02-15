@@ -3,6 +3,7 @@ import redisStatsRouter from './redis_stats'
 import seedDatabaseRouter from './seed_db'
 import mockDraftRouter from './mockdraft'
 import kayaRouter from './kaya_routes'
+import draftRouter from './draft'
 
 const defaultRouter = express.Router()
 
@@ -10,6 +11,7 @@ defaultRouter.use('/rdata', redisStatsRouter)
 defaultRouter.use('/seed', seedDatabaseRouter)
 defaultRouter.use('/mockdraft', mockDraftRouter)
 defaultRouter.use('/kayaendpoints', kayaRouter)
+defaultRouter.use('/draft', draftRouter)
 // defaultRouter.use('/user', userRouter)
 // defaultRouter.use('/stats', statRouter)
 

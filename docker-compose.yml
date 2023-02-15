@@ -1,9 +1,5 @@
 version: "3.8"
 
-networks:
-  kaya_and_yasha:
-    external: true
-
 services:
   postgres:
     image: postgres:14.4
