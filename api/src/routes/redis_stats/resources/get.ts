@@ -10,12 +10,13 @@ const getFourDayScores = async (req: Request, res: Response, next: NextFunction)
         if (!response) {
             res.status(404).json({ msg: `${redis_key} are not Available` })
         } else {
-            res.json(JSON.parse(response))
+            res.status(200).json(JSON.parse(response))
         }
     } catch (err) {
         logger.error(err)
         res.status(500).json({ msg: `An Error Occured trying to retreieve ${redis_key}` })
     }
+    next()
 }
 
 export default getFourDayScores
