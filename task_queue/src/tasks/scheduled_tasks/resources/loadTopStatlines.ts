@@ -4,7 +4,7 @@ import redisClient from '../../../utils/redisClient'
 import logger from '../../../utils/logger'
 
 const prismaGetStatlines = async () => {
-    const eightDaysAgo = addDays(Date.now(), -8)
+    const eightDaysAgo = addDays(Date.now(), -120)
     const games = await prismaClient.game.findMany({
         where: {
             DateTime: { gte: eightDaysAgo },
@@ -64,7 +64,7 @@ const prismaGetStatlines = async () => {
             //@ts-ignore
             return b.FantasyPoints - a.FantasyPoints
         })
-        .slice(0, 50)
+        .slice(0, 100)
 }
 
 export default async () => {
