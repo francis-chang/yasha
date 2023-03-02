@@ -8,7 +8,7 @@ import { prismaClient, wrapPrismaQuery } from '../../utils/prismaClient'
 
 const getPlayersOrderByFan = async () => {
     return prismaClient.player.findMany({
-        orderBy: { last_five_averages: { FantasyPoints: 'desc' } },
+        orderBy: { season_averages: { FantasyPoints: 'desc' } },
         where: {
             season_averages: { isNot: null },
         },
