@@ -8,7 +8,7 @@ import { prismaClient, wrapPrismaQuery } from '../../utils/prismaClient'
 
 const getPlayersOrderByFan = async () => {
     return prismaClient.player.findMany({
-        orderBy: { season_averages: { FantasyPoints: 'desc' } },
+        orderBy: { last_five_averages: { FantasyPoints: 'desc' } },
         where: {
             season_averages: { isNot: null },
         },
@@ -37,17 +37,33 @@ export default async (req: Request, res: Response, next: NextFunction) => {
 
     if (response) {
         const newSeason = response.map((player) => {
-            if (!player.season_averages) {
+            if (!player.season_averages && !player.last_five_averages) {
                 return player
+            } else {
+                //@ts-ignore
+                const { FieldGoalsPercentage, ThreePointersPercentage, FreeThrowsPercentage } = player.season_averages
+                const fgpFloat = parseFloat(`${FieldGoalsPercentage}`)
+                const tppFloat = parseFloat(`${ThreePointersPercentage}`)
+                const ftpFloat = parseFloat(`${FreeThrowsPercentage}`)
+                const fgp = Number.isNaN(fgpFloat) || fgpFloat === -1 ? '~' : Math.round(fgpFloat)
+                const tpp = Number.isNaN(fgpFloat) || fgpFloat === -1 ? '~' : Math.round(tppFloat)
+                const ftp = Number.isNaN(fgpFloat) || fgpFloat === -1 ? '~' : Math.round(ftpFloat)
+
+                //@ts-ignore
+                const lfgafgpFloat = parseFloat(`${player.last_five_averages.FieldGoalsPercentage}`)
+                //@ts-ignore
+                const lfgatppFloat = parseFloat(`${player.last_five_averages.ThreePointersPercentage}`)
+                //@ts-ignore
+                const lfgaftpFloat = parseFloat(`${player.last_five_averages.FreeThrowsPercentage}`)
+                const lfgafgp = Number.isNaN(lfgafgpFloat) || lfgafgpFloat === -1 ? '~' : Math.round(lfgafgpFloat)
+                const lfgatpp = Number.isNaN(lfgafgpFloat) || lfgafgpFloat === -1 ? '~' : Math.round(lfgatppFloat)
+                const lfgaftp = Number.isNaN(lfgafgpFloat) || lfgafgpFloat === -1 ? '~' : Math.round(lfgaftpFloat)
+                return {
+                    ...player,
+                    season_averages: { ...player.season_averages, pct: `${fgp}/${tpp}/${ftp}` },
+                    last_five_averages: { ...player.last_five_averages, pct: `${lfgafgp}/${lfgatpp}/${lfgaftp}` },
+                }
             }
-            const { FieldGoalsPercentage, ThreePointersPercentage, FreeThrowsPercentage } = player.season_averages
-            const fgpFloat = parseFloat(`${FieldGoalsPercentage}`)
-            const tppFloat = parseFloat(`${ThreePointersPercentage}`)
-            const ftpFloat = parseFloat(`${FreeThrowsPercentage}`)
-            const fgp = Number.isNaN(fgpFloat) || fgpFloat === -1 ? '~' : Math.round(fgpFloat)
-            const tpp = Number.isNaN(fgpFloat) || fgpFloat === -1 ? '~' : Math.round(tppFloat)
-            const ftp = Number.isNaN(fgpFloat) || fgpFloat === -1 ? '~' : Math.round(ftpFloat)
-            return { ...player, season_averages: { ...player.season_averages, pct: `${fgp}/${tpp}/${ftp}` } }
         })
         return res.status(200).json(newSeason)
     }
