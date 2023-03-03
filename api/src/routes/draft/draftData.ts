@@ -45,9 +45,9 @@ export default async (req: Request, res: Response, next: NextFunction) => {
                 const fgpFloat = parseFloat(`${FieldGoalsPercentage}`)
                 const tppFloat = parseFloat(`${ThreePointersPercentage}`)
                 const ftpFloat = parseFloat(`${FreeThrowsPercentage}`)
-                const fgp = Number.isNaN(fgpFloat) || fgpFloat === -1 ? '~' : Math.round(fgpFloat)
-                const tpp = Number.isNaN(fgpFloat) || fgpFloat === -1 ? '~' : Math.round(tppFloat)
-                const ftp = Number.isNaN(fgpFloat) || fgpFloat === -1 ? '~' : Math.round(ftpFloat)
+                const fgp = Number.isNaN(fgpFloat) || fgpFloat < 0 ? '~' : Math.round(fgpFloat)
+                const tpp = Number.isNaN(fgpFloat) || fgpFloat < 0 ? '~' : Math.round(tppFloat)
+                const ftp = Number.isNaN(fgpFloat) || fgpFloat < 0 ? '~' : Math.round(ftpFloat)
 
                 //@ts-ignore
                 const lfgafgpFloat = parseFloat(`${player.last_five_averages.FieldGoalsPercentage}`)
@@ -55,9 +55,9 @@ export default async (req: Request, res: Response, next: NextFunction) => {
                 const lfgatppFloat = parseFloat(`${player.last_five_averages.ThreePointersPercentage}`)
                 //@ts-ignore
                 const lfgaftpFloat = parseFloat(`${player.last_five_averages.FreeThrowsPercentage}`)
-                const lfgafgp = Number.isNaN(lfgafgpFloat) || lfgafgpFloat === -1 ? '~' : Math.round(lfgafgpFloat)
-                const lfgatpp = Number.isNaN(lfgafgpFloat) || lfgafgpFloat === -1 ? '~' : Math.round(lfgatppFloat)
-                const lfgaftp = Number.isNaN(lfgafgpFloat) || lfgafgpFloat === -1 ? '~' : Math.round(lfgaftpFloat)
+                const lfgafgp = Number.isNaN(lfgafgpFloat) || lfgafgpFloat < 0 ? '~' : Math.round(lfgafgpFloat)
+                const lfgatpp = Number.isNaN(lfgafgpFloat) || lfgafgpFloat < 0 ? '~' : Math.round(lfgatppFloat)
+                const lfgaftp = Number.isNaN(lfgafgpFloat) || lfgafgpFloat < 0 ? '~' : Math.round(lfgaftpFloat)
                 return {
                     ...player,
                     season_averages: { ...player.season_averages, pct: `${fgp}/${tpp}/${ftp}` },
