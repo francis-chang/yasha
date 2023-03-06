@@ -13,6 +13,20 @@ const insertGames = async (data: Game[]) => {
     })
 }
 
+const upsertGame = async (data: Game) => {
+    return await prismaClient.game.upsert({
+        where: { GameID: data.GameID },
+        update: {
+            ...data,
+            Quarters: data.Quarters as Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue | undefined,
+        },
+        create: {
+            ...data,
+            Quarters: data.Quarters as Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue | undefined,
+        },
+    })
+}
+
 const gameMapFunction = (game: GameOfScheduleResponse, stadium: string, city: string) => {
     // SportsData gives dates in EST
     const DateTime = new Date(game.DateTime + '-04:00')
@@ -54,7 +68,17 @@ export default async () => {
                 return gameMapFunction(game, stadium.Name, stadium.City)
             }
         })
-        await wrapPrismaQuery(() => insertGames(mappedGames))
-        logger.info('Games have been uploaded to db')
+        mappedGames.forEach(async (game) => {
+            if (game.Status !== 'Canceled') {
+                try {
+                    const response = await upsertGame(game)
+                } catch (err) {
+                    console.log(game.GameID)
+                    console.log(err)
+                }
+            }
+        }, [])
+        // await wrapPrismaQuery(() => insertGames(mappedGames))
+        // logger.info('Games have been uploaded to db')
     }
 }
