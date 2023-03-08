@@ -20,12 +20,16 @@ export default async () => {
         const mappedGames = games.map(({ GameID, DateTimeUTC }) => {
             // const zonedTime = utcToZonedTime(new Date(DateTimeUTC), 'America/Los_Angeles')
             if (DateTimeUTC) {
-                const formattedTime = formatInTimeZone(
-                    new Date(DateTimeUTC + 'Z'),
-                    'America/Los_Angeles',
-                    'yyyy-MMM-dd'
-                )
-                return wrapPrismaQuery(() => updateGame(GameID, new Date(DateTimeUTC), formattedTime))
+                try {
+                    const formattedTime = formatInTimeZone(
+                        new Date(DateTimeUTC + 'Z'),
+                        'America/Los_Angeles',
+                        'yyyy-MMM-dd'
+                    )
+                    return wrapPrismaQuery(() => updateGame(GameID, new Date(DateTimeUTC), formattedTime))
+                } catch (err) {
+                    logger.info(err, DateTimeUTC)
+                }
             }
         })
 
