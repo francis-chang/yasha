@@ -28,6 +28,32 @@ const getPlayersOrderByFan = async () => {
             },
             season_averages: true,
             last_five_averages: true,
+            statlines: {
+                where: { NOT: { game: { Status: 'Scheduled' } } },
+                orderBy: { game: { DateTime: 'desc' } },
+                select: {
+                    InjuryStatus: true,
+                    Minutes: true,
+                    Seconds: true,
+                    FieldGoalsMade: true,
+                    FieldGoalsAttempted: true,
+                    FieldGoalsPercentage: true,
+                    ThreePointersMade: true,
+                    ThreePointersAttempted: true,
+                    FreeThrowsMade: true,
+                    FreeThrowsAttempted: true,
+                    FreeThrowsPercentage: true,
+                    Rebounds: true,
+                    Assists: true,
+                    Steals: true,
+                    BlockedShots: true,
+                    Points: true,
+                    Turnovers: true,
+                    opponent_team: { select: { Key: true } },
+                },
+
+                take: 7,
+            },
         },
     })
 }
