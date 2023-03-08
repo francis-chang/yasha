@@ -56,7 +56,7 @@ const prismaGetStatlines = async () => {
             },
         },
     })
-
+    //orderBy relation for some reason doesn't work, so we do it manually
     return games
         .map((g) => [...g.statlines])
         .flat()
@@ -64,7 +64,7 @@ const prismaGetStatlines = async () => {
             //@ts-ignore
             return b.FantasyPoints - a.FantasyPoints
         })
-        .slice(0, 100)
+        .slice(0, 25)
 }
 
 export default async () => {
