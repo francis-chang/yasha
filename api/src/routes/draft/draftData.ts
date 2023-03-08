@@ -49,6 +49,7 @@ const getPlayersOrderByFan = async () => {
                     BlockedShots: true,
                     Points: true,
                     Turnovers: true,
+                    FantasyPoints: true,
                     opponent_team: { select: { Key: true } },
                     game: { select: { nba_day: true } },
                 },
