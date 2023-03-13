@@ -38,8 +38,10 @@ if (process.env.REDIS_BULLMQ_URL) {
         // await statsqueue.add('loadTStatlines', null, { repeat: { every: 5000 } })
         // await statsqueue.add('loadGameInfo', null, { repeat: { every: 10000 } })
         // await statsqueue.add('loadTopAverages', null, { repeat: { pattern: '*/15 * * * *' } })
+
         // await statsqueue.add('loadTopStatlines', null, { repeat: { pattern: '*/30 * * * *' } })
-        // await statsqueue.add('loadDraftList', null, { repeat: { pattern: '0 0 * * *' } })
+        // await statsqueue.add('loadComputerPickDraftList', null, { repeat: { pattern: '0 0 * * *' } })
+        await statsqueue.add('loadDraftList', null, { repeat: { every: 10000 } })
     })()
 } else {
     console.log('env var TQ_STATS_URL not found, please check bull service in docker-compose.yml')

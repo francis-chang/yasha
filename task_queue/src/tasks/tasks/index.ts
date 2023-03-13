@@ -6,7 +6,7 @@ import updateAverages from './resources/updateAverages'
 import updateLastFiveAverages from './resources/updateLastFiveAverages'
 import addPlayer from './resources/addPlayer'
 import loadDraftListForMock from './resources/loadDraftListForMock'
-import loadDraftList from './resources/loadDraftList'
+import loadComputerPickDraftList from './resources/loadComputerPickDraftList'
 
 export {
     loadBoxScore,
@@ -17,5 +17,5 @@ export {
     updateLastFiveAverages,
     addPlayer,
     loadDraftListForMock,
-    loadDraftList,
+    loadComputerPickDraftList,
 }

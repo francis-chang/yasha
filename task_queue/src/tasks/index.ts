@@ -1,6 +1,7 @@
 import { Job } from 'bullmq'
 import { loadGameInfo, loadSingleDayStatlines, loadTopAverages, loadTopStatlines } from './redis_stats_tasks'
 import {
+    loadDraftList,
     loadFourDayScores,
     loadTStatlines,
     updateBoxScoreMinute,
@@ -18,7 +19,7 @@ import {
     updateLastFiveAverages,
     addPlayer,
     loadDraftListForMock,
-    loadDraftList,
+    loadComputerPickDraftList,
 } from './tasks'
 
 const productionSwitch = async (job: Job) => {
@@ -61,6 +62,9 @@ export default async (job: Job) => {
     switch (job.name) {
         case 'loadDraftList':
             loadDraftList()
+            break
+        case 'loadComputerPickDraftList':
+            loadComputerPickDraftList()
             break
         case 'loadTStatlines':
             loadTStatlines()
