@@ -10,6 +10,13 @@ if (process.env.REDIS_BULLMQ_URL) {
 
     const worker = new Worker('myqueue', jobProcessor, {
         connection,
+        //@ts-ignore
+        removeOnComplete: {
+            age: 1200,
+        },
+        removeOnFail: {
+            age: 24 * 3600,
+        },
     })
 
     worker.on('completed', (job) => {
