@@ -91,7 +91,7 @@ export default async () => {
                 }
             }
         })
-        redisClient.set('DRAFT_LIST', JSON.stringify(response))
+        redisClient.set('DRAFT_LIST', JSON.stringify(newSeason))
         console.log('DRAFT_LIST_UPLOADED')
     }
 }
